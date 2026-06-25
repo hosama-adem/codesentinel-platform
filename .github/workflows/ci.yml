@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  lint:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Frontend Install
+        run: |
+          cd frontend
+          npm install
+
+      - name: ESLint
+        run: |
+          cd frontend
+          npm run lint
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.11
+
+      - name: Backend Install
+        run: |
+          cd backend
+          pip install -r requirements.txt
+
+      - name: Black Check
+        run: |
+          cd backend
+          black . --check
