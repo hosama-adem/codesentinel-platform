@@ -10,38 +10,37 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # FIX: stable checkout
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
+      # FIX: use supported Node version
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 22
 
       - name: Frontend Install
-        run: |
-          cd frontend
-          npm install
+        working-directory: frontend
+        run: npm install
 
       - name: ESLint
-        run: |
-          cd frontend
-          npm run lint
+        working-directory: frontend
+        run: npm run lint
 
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: 3.11
 
-      - name: Backend Install
-        run: |
-          cd backend
-          pip install -r requirements.txt
+      - name: Install backend dependencies
+        working-directory: backend
+        run: pip install -r requirements.txt
 
       - name: Black Check
+        working-directory: backend
         run: |
-          cd backend
           pip install black
           black . --check
